@@ -39,5 +39,4 @@ function getEmployees(people) {
 
 const sorted = sortList(employes);
 
-sortList(employes);
 getEmployees(sorted);
