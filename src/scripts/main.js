@@ -1,42 +1,53 @@
 'use strict';
 
-const liElements = [...document.querySelectorAll('li')];
 const list = document.querySelector('ul');
+// const liElements = [...document.querySelectorAll('li')];
+// const list = document.querySelector('ul');
 
-const employes = liElements.map((li) => ({
-  name: li.innerText,
-  position: li.dataset.position,
-  salary: convertToNumber(li.dataset.salary),
-  age: li.dataset.age,
-}));
+// const employes = liElements.map((li) => ({
+//   name: li.innerText,
+//   position: li.dataset.position,
+//   salary: convertToNumber(li.dataset.salary),
+//   age: li.dataset.age,
+// }));
 
-function convertToNumber(value) {
-  const number = parseFloat(value.slice(1));
+// function convertToNumber(value) {
+//   const number = parseFloat(value.slice(1));
 
-  return number;
-}
+//   return number;
+// }
 
 function sortList(people) {
-  const sortedEmployes = people.sort((a, b) => b.salary - a.salary);
+  const sortedEmployees = [...list.children];
 
-  return sortedEmployes;
+  sortedEmployees.sort((a, b) => {
+    const salary1 = a.dataset.salary.replace(/[$,]/g, '');
+    const salary2 = b.dataset.salary.replace(/[$,]/g, '');
+
+    return salary2 - salary1;
+  });
+  sortedEmployees.forEach((elem) => list.appendChild(elem));
 }
 
 function getEmployees(people) {
-  list.innerHTML = '';
+  const employees = [];
 
-  people.forEach((person) => {
-    const li = document.createElement('li');
+  for (const person of people.children) {
+    const personName = person.textContent.trim();
+    const { age, position, salary } = person.dataset;
+    const cleanSalary = parseFloat(salary.replace(/[$,]/g, ''));
+    const numberAge = parseInt(age);
 
-    li.innerText = person.name;
-    li.dataset.position = person.position;
-    li.dataset.salary = `$${person.salary}`;
-    li.dataset.age = person.age;
+    employees.push({
+      salary: cleanSalary,
+      age: numberAge,
+      position,
+      name: personName,
+    });
+  }
 
-    list.append(li);
-  });
+  return employees;
 }
+sortList(list);
 
-const sorted = sortList(employes);
-
-getEmployees(sorted);
+getEmployees(list);
